@@ -1,3 +1,4 @@
+import os
 import ast
 import matplotlib.pyplot as plt
 
@@ -10,7 +11,7 @@ def load_code(path_to_file:str) -> ast.AST:
     return tree
 
 
-def analyse_calls(tree, should_print=False) -> dict:
+def analyse_calls(tree) -> dict:
     calls = dict()
     for node in ast.walk(tree):
         if isinstance(node, ast.Call):
@@ -34,20 +35,10 @@ def analyse_calls(tree, should_print=False) -> dict:
             if call_name:
                 calls[call_name] = calls.get(call_name, 0) + 1
 
-    if should_print:
-        ordered_calls = sorted(calls.items(), key=lambda x: x[1], reverse=True)
-        print("-------------------------------------")
-        print("--------  Analysis of Calls  --------")
-        print("-------------------------------------")
-        print(f"There are {sum(calls.values())} calls.\n")
-        for i, x in enumerate(ordered_calls):
-            print(f"{x[1]}x {x[0]}")    # {i+1:02d}
-        print("")
-
     return calls
 
 
-def analyse_imports(tree, should_print=False) -> list:
+def analyse_imports(tree) -> list:
     imports = []
     for node in ast.walk(tree):
         if isinstance(node, ast.Import):
@@ -57,19 +48,10 @@ def analyse_imports(tree, should_print=False) -> list:
             for name in node.names:
                 imports += [f"{node.module}.{name.name}"]
 
-    if should_print:
-        ordered_imports = sorted(imports, key=lambda x: x, reverse=False)
-        print("-------------------------------------")
-        print("-------  Analysis of Imports  -------")
-        print("-------------------------------------")
-        for i, x in enumerate(ordered_imports):
-            print(f"- {x}")
-        print("")
-
     return imports
 
 
-def analyse_definitions(tree, should_print=False) -> None:
+def analyse_definitions(tree) -> None:
     defs = []
     lambdas = 0
     classes = []
@@ -94,28 +76,11 @@ def analyse_definitions(tree, should_print=False) -> None:
         elif isinstance(node, ast.Nonlocal):
             nonlocals += 1
 
-    if should_print:
-        print("-------------------------------------")
-        print("-----  Analysis of Definitions  -----")
-        print("-------------------------------------")
-        print(f"- Defined Functions ({len(defs)}):")
-        for x in defs:
-            print(f"    - {x}")
-        print(f"\n- Defined Classes ({len(classes)}):")
-        for x in classes:
-            print(f"    - {x}")
-        print(f"\n- Lambda Functions: {lambdas}")
-        print(f"\n- Returns: {returns}")
-        print(f"\n- Yields: {yields}")
-        print(f"\n- global Keywords: {globals}")
-        print(f"\n- nonlocal Keywords: {nonlocals}")
-        print("")
-
-    return None
+    return defs, lambdas, classes, returns, yields, globals, nonlocals
 
 
 # Control Flow
-def analyse_structures(tree, should_print=False) -> None:
+def analyse_structures(tree) -> None:
     ifs = 0
     fors = 0
     whiles = 0
@@ -140,24 +105,10 @@ def analyse_structures(tree, should_print=False) -> None:
         elif isinstance(node, ast.With):
             withs += 1
 
-    if should_print:
-        print("-------------------------------------")
-        print("-----  Analysis of Structures  ------")
-        print("-------------------------------------")
-        print(f"- Defined loops ({fors+whiles}):")
-        print(f"    - For-Loops: {fors}")
-        print(f"    - While-Loops: {whiles}")
-        print(f"\n- Break's: {breaks}")
-        print(f"\n- Continue's: {continues}")
-        print(f"\n- If-Statements: {ifs}")
-        print(f"\n- Try-Blocks: {tries}")
-        print(f"\n- With-Blocks: {withs}")
-        print("")
-
-    return None
+    return ifs, fors, whiles, breaks, continues, tries, withs
 
 
-def analyse_operations(tree, should_print=False) -> list:
+def analyse_operations(tree) -> list:
     operations = 0
     adds = 0
     subs = 0
@@ -217,31 +168,10 @@ def analyse_operations(tree, should_print=False) -> list:
         elif isinstance(node, ast.NotIn):
             not_ins += 1
 
-    if should_print:
-        print("-------------------------------------")
-        print("-----  Analysis of Operations  ------")
-        print("-------------------------------------")
-        print(f"- Operations ({operations}):")
-        print(f"    - Add's: {adds}")
-        print(f"    - Sub's: {subs}")
-        print(f"    - Mult's: {mults}")
-        print(f"    - Div's: {divs}")
-        print(f"    - Mod's: {mods}")
-        print(f"    - Floor Div's: {floor_divs}")
-        print(f"    - Pow's: {pows}")
-        print(f"\n- Bool Operations ({bool_operations}):")
-        print(f"    - And's: {ands}")
-        print(f"    - Or's: {ors}")
-        print(f"    - Equals's: {equals}")
-        print(f"    - Not Equals's: {not_equals}")
-        print(f"    - Is's: {is_}")
-        print(f"    - Is not's: {is_not}")
-        print(f"    - In's: {ins}")
-        print(f"    - Not In's: {not_ins}")
-        print("")
+    # return [('Add', adds), ('Sub', subs), ('Mult', mults), ('Div', divs), ('Mod', mods), ('Floor Div', floor_divs), ('Pow', pows), 
+    #        ('And', ands), ('Or', ors), ('Equal', equals), ('Not Equal', not_equals), ('Is', is_), ('Is Not', is_not), ('In', ins), ('Not In', not_ins)]
 
-    return [('Add', adds), ('Sub', subs), ('Mult', mults), ('Div', divs), ('Mod', mods), ('Floor Div', floor_divs), ('Pow', pows), 
-            ('And', ands), ('Or', ors), ('Equal', equals), ('Not Equal', not_equals), ('Is', is_), ('Is Not', is_not), ('In', ins), ('Not In', not_ins)]
+    return operations, adds, subs, mults, divs, mods, floor_divs, pows, bool_operations, ands, ors, equals, not_equals, is_, is_not, ins, not_ins
 
 
 def visualize(calls:dict, imports:list, ops:list):
@@ -272,24 +202,153 @@ def visualize(calls:dict, imports:list, ops:list):
     plt.show()
 
 
-def analyse_code(path_to_file:str, should_print=False, should_visualize=False):
+def create_analysis_str(
+        name,
+        calls,
+        imports,
+        definitions,
+        structures,
+        operations
+        ):
+    
+    # begin
+    title = f"\n    >>> Analysis of {name} <<<    \n"
+    title_len = len(title)
+    analylsis = f"\n\n{'_'*title_len}"
+    analylsis += title
+
+    # call
+    ordered_calls = sorted(calls.items(), key=lambda x: x[1], reverse=True)
+    analylsis += "\n-------------------------------------"
+    analylsis += "\n--------  Analysis of Calls  --------"
+    analylsis += "\n-------------------------------------"
+    analylsis += f"\nThere are {sum(calls.values())} calls.\n"
+    for i, x in enumerate(ordered_calls):
+        analylsis += f"\n{x[1]}x {x[0]}"    # {i+1:02d}
+    analylsis += "\n"
+
+    # imports
+    ordered_imports = sorted(imports, key=lambda x: x, reverse=False)
+    analylsis += "\n-------------------------------------"
+    analylsis += "\n-------  Analysis of Imports  -------"
+    analylsis += "\n-------------------------------------"
+    for i, x in enumerate(ordered_imports):
+        analylsis += f"\n- {x}"
+    analylsis += "\n"
+
+    # definitions
+    defs, lambdas, classes, returns, yields, globals, nonlocals = definitions
+    analylsis += "\n-------------------------------------"
+    analylsis += "\n-----  Analysis of Definitions  -----"
+    analylsis += "\n-------------------------------------"
+    analylsis += f"\n- Defined Functions ({len(defs)}):"
+    for x in defs:
+        analylsis += f"\n    - {x}"
+    analylsis += f"\n- Defined Classes ({len(classes)}):"
+    for x in classes:
+        analylsis += f"\n    - {x}"
+    analylsis += f"\n\n- Lambda Functions: {lambdas}"
+    analylsis += f"\n\n- Returns: {returns}"
+    analylsis += f"\n\n- Yields: {yields}"
+    analylsis += f"\n\n- global Keywords: {globals}"
+    analylsis += f"\n\n- nonlocal Keywords: {nonlocals}"
+    analylsis += "\n"
+
+    # structures
+    ifs, fors, whiles, breaks, continues, tries, withs = structures
+    analylsis += "\n-------------------------------------"
+    analylsis += "\n-----  Analysis of Structures  ------"
+    analylsis += "\n-------------------------------------"
+    analylsis += f"\n- Defined loops ({fors+whiles}):"
+    analylsis += f"\n    - For-Loops: {fors}"
+    analylsis += f"\n    - While-Loops: {whiles}"
+    analylsis += f"\n\n- Break's: {breaks}"
+    analylsis += f"\n\n- Continue's: {continues}"
+    analylsis += f"\n\n- If-Statements: {ifs}"
+    analylsis += f"\n\n- Try-Blocks: {tries}"
+    analylsis += f"\n\n- With-Blocks: {withs}"
+    analylsis += "\n"
+
+    # operations
+    operations, adds, subs, mults, divs, mods, floor_divs, pows, bool_operations, ands, ors, equals, not_equals, is_, is_not, ins, not_ins = operations
+    analylsis += "\n-------------------------------------"
+    analylsis += "\n-----  Analysis of Operations  ------"
+    analylsis += "\n-------------------------------------"
+    analylsis += f"\n- Operations ({operations}):"
+    analylsis += f"\n    - Add's: {adds}"
+    analylsis += f"\n    - Sub's: {subs}"
+    analylsis += f"\n    - Mult's: {mults}"
+    analylsis += f"\n    - Div's: {divs}"
+    analylsis += f"\n    - Mod's: {mods}"
+    analylsis += f"\n    - Floor Div's: {floor_divs}"
+    analylsis += f"\n    - Pow's: {pows}"
+    analylsis += f"\n\n- Bool Operations ({bool_operations}):"
+    analylsis += f"\n    - And's: {ands}"
+    analylsis += f"\n    - Or's: {ors}"
+    analylsis += f"\n    - Equals's: {equals}"
+    analylsis += f"\n    - Not Equals's: {not_equals}"
+    analylsis += f"\n    - Is's: {is_}"
+    analylsis += f"\n    - Is not's: {is_not}"
+    analylsis += f"\n    - In's: {ins}"
+    analylsis += f"\n    - Not In's: {not_ins}"
+    analylsis += "\n"
+
+    # end
+    analylsis += f"\n{' '*(title_len//2-11)}>>> END of Analysis <<<"
+    analylsis += "_"*title_len
+
+    return analylsis
+
+
+# def add_new_entry(
+#                 calls
+#                 imports
+#                 definitions
+#                 structures
+#                 operations
+#                 )
+
+
+def analyse_code(path_to_file_or_dir:str, name:str, save_path:str, should_print=True, should_save=True):    #should_visualize=False):
     # Analysis
+    if os.path.isdir(path_to_file_or_dir):
+        pass
+        # empty init
+        ...
+
+        # analyse every py file
+        for cur_root, cur_dirs, cur_files in os.path.walk(path_to_file_or_dir):
+            for cur_file in cur_files:
+                if cur_file.endswith(".py"):   # or cur_file.endswith(".ipynb"):
+                    tree = load_code(os.path.join(cur_root, cur_file))
+                    calls = analyse_calls(tree)
+                    imports = analyse_imports(tree)
+                    analyse_definitions(tree)
+                    analyse_structures(tree)
+                    operations = analyse_operations(tree)
+
+                    # merge
+                    # ...
+    else:
+        tree = load_code(path_to_file_or_dir)
+        calls = analyse_calls(tree)
+        imports = analyse_imports(tree)
+        definitions = analyse_definitions(tree)
+        structures = analyse_structures(tree)
+        operations = analyse_operations(tree)
+
+
+    analysis_str = create_analysis_str(name=name, calls=calls, imports=imports, definitions=definitions, structures=structures, operations=operations)
+
     if should_print:
-        title = f"    >>> Analysis of {path_to_file.split('/')[-1]} <<<    "
-        print("_"*len(title))
-        print(f"{title}\n")
-    tree = load_code(path_to_file)
-    calls = analyse_calls(tree, should_print)
-    imports = analyse_imports(tree, should_print)
-    analyse_definitions(tree, should_print)
-    analyse_structures(tree, should_print)
-    operations = analyse_operations(tree, should_print)
-    if should_print:
-        print(f"\n{' '*(len(title)//2-11)}>>> END of Analysis <<<")
-        print("_"*len(title))
+        print(analysis_str)
+
+    if should_save:
+        with open(os.path.join(save_path, "code_analysis.txt"), "w") as file:
+            file.write(analysis_str)
 
     # Visualisation
-    if should_visualize:
-        visualize(calls, imports, operations)
+    # if should_visualize:
+    #     visualize(calls, imports, operations)
 
 
