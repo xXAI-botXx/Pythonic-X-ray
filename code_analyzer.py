@@ -1,8 +1,9 @@
 import ast
+import matplotlib.pyplot as plt
 
 
 def load_code(path_to_file:str) -> ast.AST:
-    #filename = 
+     
     with open(path_to_file) as f:
         tree = ast.parse(f.read(), filename=path_to_file, mode='exec')
 
@@ -14,22 +15,24 @@ def analyse_calls(tree, should_print=False) -> dict:
     for node in ast.walk(tree):
         if isinstance(node, ast.Call):
             call = node.func
-            while True:
+            call_name = None
+            
+            while call:
                 if isinstance(call, ast.Attribute):
-                    if type(call.value) == ast.Name and call.attr != None and len(call.attr) > 0:
-                        call = f"{call.value.id}.{call.attr}"
+                    if isinstance(call.value, ast.Name) and call.attr:
+                        call_name = f"{call.value.id}.{call.attr}"
                         break
                     call = call.value
                 elif isinstance(call, ast.Call):
                     call = call.func
                 elif isinstance(call, ast.Name):
-                    call = call.id
+                    call_name = call.id
                     break
-
-            if call in calls.keys():
-                calls[call] += 1
-            else:
-                calls[call] = 1
+                else:
+                    break
+            
+            if call_name:
+                calls[call_name] = calls.get(call_name, 0) + 1
 
     if should_print:
         ordered_calls = sorted(calls.items(), key=lambda x: x[1], reverse=True)
