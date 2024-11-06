@@ -244,7 +244,7 @@ def create_analysis_str(
     analylsis += f"\n- Defined Functions ({len(defs)}):"
     for x in defs:
         analylsis += f"\n    - {x}"
-    analylsis += f"\n- Defined Classes ({len(classes)}):"
+    analylsis += f"\n\n- Defined Classes ({len(classes)}):"
     for x in classes:
         analylsis += f"\n    - {x}"
     analylsis += f"\n\n- Lambda Functions: {lambdas}"
@@ -294,7 +294,7 @@ def create_analysis_str(
     analylsis += "\n"
 
     # end
-    analylsis += f"\n{' '*(title_len//2-11)}>>> END of Analysis <<<"
+    analylsis += f"\n{' '*(title_len//2-11)}>>> END of Analysis <<<\n"
     analylsis += "_"*title_len
 
     return analylsis

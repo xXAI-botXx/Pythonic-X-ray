@@ -1,0 +1,401 @@
+
+
+______________________________________________________________
+    >>> Analysis of Mask R-CNN Instance Segmentation <<<    
+
+-------------------------------------
+--------  Analysis of Calls  --------
+-------------------------------------
+There are 727 calls.
+
+41x os.path
+40x len
+36x log
+24x mlflow.log_param
+20x np.sum
+17x T.functional
+16x print
+16x round
+15x value.cpu
+14x random.random
+13x range
+11x int
+11x np.unique
+11x ValueError
+10x statistics.mean
+8x np.random
+7x dict
+7x random.randint
+7x extract_and_visualize_mask
+6x np.zeros
+6x calc_metric_with_object_matching
+6x np.array
+6x np.mean
+6x np.where
+5x max
+5x os.makedirs
+5x enumerate
+5x self.transform
+5x random.uniform
+5x result.append
+5x aggregation.lower
+5x np.transpose
+5x mlflow.log_metric
+5x writer.add_scalar
+4x min
+4x torch.zeros
+4x cv2.imread
+4x torch.device
+4x plt.subplots
+4x fig.subplots_adjust
+4x np.full
+4x name.split
+4x np.clip
+4x T.GaussianBlur
+4x cv2.add
+4x open
+3x zip
+3x datetime.now
+3x clear_printing
+3x Dual_Dir_Dataset
+3x DataLoader
+3x train_loop
+3x register_hook
+3x Image.fromarray
+3x pil_to_cv2
+3x cv2_to_pil
+3x T.Compose
+3x torch.no_grad
+3x np.min
+3x resize_transform
+3x plt.savefig
+3x plt.show
+3x plt.clf
+3x model
+3x image.cpu
+3x any
+3x tuple
+3x Resize
+3x sum
+3x cv2.subtract
+2x model.named_parameters
+2x load_maskrcnn
+2x model.to
+2x time.time
+2x model.train
+2x Train_Augmentations
+2x cv2.cvtColor
+2x np.prod
+2x np.logical_and
+2x plot_and_save_evaluation
+2x T.ToTensor
+2x torch.as_tensor
+2x os.listdir
+2x self.augmentations
+2x torch.cuda
+2x mlflow.pytorch
+2x update_output
+2x return_objective.lower
+2x is_mlflow_active
+2x output.detach
+2x transform_mask
+2x ax.imshow
+2x ax.set_title
+2x ax.axis
+2x model.eval
+2x np.concatenate
+2x np.max
+2x possible_bg_values.items
+2x np.arange
+2x original_mask.reshape
+2x new_mask.reshape
+2x random.choice
+2x cv2.bitwise_and
+2x f.write
+2x writer.close
+2x mlflow.end_run
+2x cv2.addWeighted
+2x cv2.split
+2x self.rgb_mask_to_grey_mask
+2x torch.save
+2x masks.cpu
+2x cv2.imwrite
+2x eval_pred
+2x update_evaluation_summary
+2x model.state_dict
+2x np.median
+2x loss_avgs.keys
+2x str
+2x np.std
+2x loss_dict.values
+2x np.var
+1x resnet_fpn_backbone
+1x MaskRCNN
+1x model_parts.items
+1x os.system
+1x clear_output
+1x Adam
+1x CyclicLR
+1x trial.suggest_float
+1x trial.suggest_int
+1x layer.register_forward_hook
+1x insights.items
+1x np.copy
+1x linear_sum_assignment
+1x np.logical_or
+1x calc_precision_and_recall
+1x calc_f1_score
+1x torch.nn
+1x GeneralizedRCNNTransform
+1x model.load_state_dict
+1x self.load_datanames
+1x pad_masks
+1x torch.stack
+1x T.Resize
+1x model.parameters
+1x SummaryWriter
+1x mlflow.get_experiment_by_name
+1x mlflow.set_experiment
+1x insight.size
+1x plt.suptitle
+1x result_mask.astype
+1x model_parts.keys
+1x self.verify_data
+1x boxes.append
+1x rgb_img.reshape
+1x self.verify_mask_post_processing
+1x T.RandomCrop
+1x cv2.resize
+1x isinstance
+1x color_image.astype
+1x cv2.rectangle
+1x np.zeros_like
+1x metric_func
+1x eval_file.write
+1x sum_dict.keys
+1x Inference_Augmentations
+1x register_maskrcnn_hooks
+1x save_and_show_evaluation_summary
+1x train
+1x partial
+1x optuna.create_study
+1x study.optimize
+1x torch.load
+1x model_part_name_1.upper
+1x model_part_name_2.upper
+1x np.expand_dims
+1x np.array_equal
+1x Random_Flip
+1x Random_Rotation
+1x Random_Crop
+1x Random_Brightness_Contrast
+1x Add_Gaussian_Noise
+1x Random_Gaussian_Blur
+1x Random_Scale
+1x Random_Background_Modification
+1x list
+1x optimizer.zero_grad
+1x losses.backward
+1x optimizer.step
+1x scheduler.step
+1x loss_dict.items
+1x mlflow.create_experiment
+1x mlflow.active_run
+1x mlflow.start_run
+1x mlflow.set_tag
+1x IndexError
+1x precision.append
+1x recall.append
+1x masks.to
+1x np.save
+1x visualize_results
+1x visualize_insights
+1x optuna_file.write
+1x inference
+1x self.get_bounding_boxes
+1x torch.ones
+1x mask_1.flatten
+1x mask_2.flatten
+1x plt.imshow
+1x image_path.endswith
+1x possible_bg_values.keys
+1x cv2.merge
+1x file_path.split
+1x image.to
+1x v.to
+1x weights_path.split
+1x depth_path.endswith
+1x mask_path.endswith
+1x t.items
+1x eval_sum_dict.items
+1x loss_avgs.items
+1x timedelta
+
+-------------------------------------
+-------  Analysis of Imports  -------
+-------------------------------------
+- IPython.display.clear_output
+- PIL.Image
+- cv2
+- datetime.datetime
+- datetime.timedelta
+- enum.Enum
+- functools.partial
+- matplotlib.pyplot
+- mlflow
+- mlflow.pytorch
+- numpy
+- optuna
+- os
+- random
+- scipy.optimize.linear_sum_assignment
+- statistics
+- time
+- torch
+- torch.optim.Adam
+- torch.optim.lr_scheduler.CyclicLR
+- torch.optim.lr_scheduler.OneCycleLR
+- torch.utils.data.DataLoader
+- torch.utils.data.Dataset
+- torch.utils.tensorboard.SummaryWriter
+- torchvision
+- torchvision.models.ResNet50_Weights
+- torchvision.models.detection.MaskRCNN
+- torchvision.models.detection.backbone_utils.resnet_fpn_backbone
+- torchvision.models.detection.transform.GeneralizedRCNNTransform
+- torchvision.transforms
+
+-------------------------------------
+-----  Analysis of Definitions  -----
+-------------------------------------
+- Defined Functions (64):
+    - load_maskrcnn
+    - clear_printing
+    - collate_fn
+    - cv2_to_pil
+    - pil_to_cv2
+    - log
+    - update_output
+    - pad_masks
+    - train_loop
+    - train
+    - hyperparameter_optimization
+    - register_hook
+    - register_maskrcnn_hooks
+    - visualize_insights
+    - transform_mask
+    - extract_and_visualize_mask
+    - visualize_results
+    - calc_metric_with_object_matching
+    - calc_pixel_accuracy
+    - calc_bg_fg_acc_accuracy
+    - calc_intersection_over_union
+    - calc_precision_and_recall
+    - calc_dice_coefficient
+    - calc_f1_score
+    - calc_false_positive_rate
+    - calc_false_negative_rate
+    - plot_and_save_evaluation
+    - eval_pred
+    - update_evaluation_summary
+    - save_and_show_evaluation_summary
+    - inference
+    - __init__
+    - __len__
+    - __getitem__
+    - get_bounding_boxes
+    - verify_data
+    - load_datanames
+    - verify_mask_post_processing
+    - rgb_mask_to_grey_mask
+    - __call__
+    - __init__
+    - __call__
+    - __init__
+    - __call__
+    - __init__
+    - __call__
+    - __init__
+    - __call__
+    - __init__
+    - __call__
+    - __init__
+    - __call__
+    - __init__
+    - __call__
+    - __init__
+    - __call__
+    - __init__
+    - update
+    - __call__
+    - __init__
+    - update
+    - __call__
+    - hook
+    - is_mlflow_active
+- Defined Classes (14):
+    - DATA_LOADING_MODE
+    - RUN_MODE
+    - Dual_Dir_Dataset
+    - Random_Flip
+    - Random_Rotation
+    - Random_Crop
+    - Random_Brightness_Contrast
+    - Add_Gaussian_Noise
+    - Random_Gaussian_Blur
+    - Random_Scale
+    - Random_Background_Modification
+    - Resize
+    - Train_Augmentations
+    - Inference_Augmentations
+
+- Lambda Functions: 0
+
+- Returns: 49
+
+- Yields: 0
+
+- global Keywords: 1
+
+- nonlocal Keywords: 0
+
+-------------------------------------
+-----  Analysis of Structures  ------
+-------------------------------------
+- Defined loops (45):
+    - For-Loops: 45
+    - While-Loops: 0
+
+- Break's: 2
+
+- Continue's: 1
+
+- If-Statements: 201
+
+- Try-Blocks: 6
+
+- With-Blocks: 8
+
+-------------------------------------
+-----  Analysis of Operations  ------
+-------------------------------------
+- Operations (142):
+    - Add's: 105
+    - Sub's: 20
+    - Mult's: 43
+    - Div's: 24
+    - Mod's: 3
+    - Floor Div's: 8
+    - Pow's: 0
+
+- Bool Operations (179):
+    - And's: 14
+    - Or's: 4
+    - Equals's: 55
+    - Not Equals's: 24
+    - Is's: 10
+    - Is not's: 19
+    - In's: 10
+    - Not In's: 1
+
+                    >>> END of Analysis <<<______________________________________________________________
