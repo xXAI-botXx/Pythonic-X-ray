@@ -10,7 +10,7 @@ def main(FILE_NAME, PATH):
     
 if __name__ == "__main__":
     # CHANGE THESE 2 VARS
-    FILE_NAME = "heapsort.py"
-    PATH = "./"
+    FILE_NAME = "maskrcnn_toolkit.py"
+    PATH = "../torch-mask-rcnn-instance-segmentation"
     main(FILE_NAME, PATH)
 
